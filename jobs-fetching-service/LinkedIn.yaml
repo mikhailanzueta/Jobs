@@ -1,0 +1,11 @@
+site_name: 'LinkedIn.com'
+  path: '/jobs/search/'
+        'jobs/collections/recommended/'
+    query_params: '?currentJobId=4064835825&keywords=software%20developer%20apprenticeship&origin=SWITCH_SEARCH_VERTICAL'
+                  '?currentJobId=4070749093&discover=recommended&discoveryOrigin=JOBS_HOME_JYMBII'
+    requires_auth: true
+    elements:
+      tag: 'div'
+      field: 'class'
+      value: 'jobs-search-results-list'
+      contains_link: true

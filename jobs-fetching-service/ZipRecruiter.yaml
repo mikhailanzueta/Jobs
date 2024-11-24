@@ -1,0 +1,9 @@
+site_name: 'Ziprecruiter.com'
+  path: 'jobseeker/home'
+    query_param: 'Jobs?id=L1mJU2WZ2GGTuHBXt+L4T5il4Tg='
+    required_auth: False
+    elements:
+      tag: 'div'
+      field: 'class'
+      value: 'job_sections'
+      contains_link: True
