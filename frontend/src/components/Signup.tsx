@@ -42,7 +42,7 @@ function Signup() {
                 <input type="password" name="password" id="password" placeholder='Confirm Password' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5' required />
               </div>
               <button type="submit" className='text-white text-[14px] border-[1px] border-white bg-transparent rounded-[6px] p-[12px] mb-[16px] hover:bg-wheat hover:text-black hover:border-none'>Sign up</button>
-              <button type="submit" className='text-white text-[14px] border-[1px] border-white bg-transparent rounded-[6px] p-[12px] mb-[16px] ml-2.5 hover:bg-wheat hover:text-black hover:border-none'>Sign up with Google <FontAwesomeIcon icon={faGoogle} className='ml-2 text-[13px]'/></button>
+              <button type="submit" className='text-white text-[14px] border-[1px] border-white bg-transparent rounded-[6px] p-[12px] mb-[16px] ml-2.5 hover:bg-wheat hover:text-black hover:border-none'>Sign up with Google <FontAwesomeIcon icon={faGoogle} className='ml-2 text-[13px] google-icon'/></button>
               
               <Link to="/login" className="text-center text-wheat m-[10px_auto] underline login-btn">Already have an account?</Link>
             </form>
