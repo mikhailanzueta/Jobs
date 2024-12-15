@@ -1,0 +1,9 @@
+site_name: 'glassdoor.com'
+path: '/Job/index.htm'
+query_param: 
+required_auth: True
+elements:
+  tag: 'ul'
+  field: 'class'
+  value: 'JobsList_jobList_lqjTr'
+  contains_link: True
