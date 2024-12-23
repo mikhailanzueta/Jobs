@@ -1,6 +1,6 @@
-site_name: 'Ziprecruiter.com'
+site_name: 'https://Ziprecruiter.com/'
 path: 'jobseeker/home'
-query_param: 'Jobs?id=L1mJU2WZ2GGTuHBXt+L4T5il4Tg='
+query_param: '/Jobs?id=L1mJU2WZ2GGTuHBXt+L4T5il4Tg='
 required_auth: False
 elements:
   tag: 'div'

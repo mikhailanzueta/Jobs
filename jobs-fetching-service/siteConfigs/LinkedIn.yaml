@@ -1,4 +1,4 @@
-site_name: 'LinkedIn.com'
+site_name: 'https://LinkedIn.com'
 path: 
   -  '/jobs/search/'
   -  'jobs/collections/recommended/'

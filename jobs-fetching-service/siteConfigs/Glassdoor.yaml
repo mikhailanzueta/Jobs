@@ -1,4 +1,4 @@
-site_name: 'glassdoor.com'
+site_name: 'https://glassdoor.com'
 path: '/Job/index.htm'
 query_param: 
 required_auth: True

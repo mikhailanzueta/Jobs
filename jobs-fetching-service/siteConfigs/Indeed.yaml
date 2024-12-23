@@ -1,6 +1,6 @@
-site_name: 'Indeed.com'
-path: '/viewjob/'
-query_parm: "?jk=bd02a7c0ba1a48dc&tk=1iceikugdg6oq803&from=hp&vjs=3&advn"
+site_name: 'https://Indeed.com'
+path: '/viewjob'
+query_param: "from=app-tracker-saved-appcard&hl=en&jk=d3c01f351b9342a3&tk=1ifq49gminlt0802"
 requires_auth: false
 elements:
   tag: 'div'
