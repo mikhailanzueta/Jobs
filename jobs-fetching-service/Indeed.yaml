@@ -1,0 +1,9 @@
+site_name: 'Indeed.com'
+path: '/viewjob/'
+query_parm: "?jk=bd02a7c0ba1a48dc&tk=1iceikugdg6oq803&from=hp&vjs=3&advn"
+requires_auth: false
+elements:
+  tag: 'div'
+  field: 'class'
+  value: 'jobsearch-JobComponent'
+  contains_link: true

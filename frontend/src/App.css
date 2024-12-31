@@ -1,0 +1,75 @@
+ body {
+  width: 100%;
+  background: #fff;
+  font-family: "SUSE", sans-serif;
+}
+
+
+
+.signup-page label {
+  margin-bottom: 5px;
+  width: 100px;
+  color: #fff;
+}
+
+input::placeholder {
+  color: var(--French-gray);
+  font-family: "SUSE";
+}
+
+.signup-page input {
+  width: 20vw;
+  padding: 15px;
+  border: 1px solid #fff;
+  background-color: transparent;
+  margin-left: 10px;
+  color: #fff;
+}
+
+ button {
+  margin-bottom: 16px;
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: "SUSE";
+}
+
+.login-btn {
+  display: block;
+  text-align: center;
+  margin: 20px auto;
+  text-decoration: underline;
+  color: var(--Wheat);
+}
+
+/* Global class for all icons */
+.svg-inline--fa {
+  color: (--White);
+  font-size: 18px;
+}
+
+.google-icon {
+  margin-left: 10px;
+  font-size: 13px;
+} 
+
+button:hover {
+  background-color: var(--Wheat);
+  color: var(--Black);
+  border: none;
+}
+
+
+/* End of signup.js css */ 
+
+/* Media Queries */
+@media screen and (max-width: 575px) {
+  .svg-inline--fa {
+    display: none;
+  }
+  
+}
