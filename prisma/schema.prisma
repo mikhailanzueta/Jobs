@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String              @id @default(uuid())
+  email          String              @unique
+  name           String
+  createdAt      DateTime            @default(now())
+  resumes        UserResume[]
+  passwords      UserPassword[]
+  activeResume   ActiveUserResume?
+  activePassword ActiveUserPassword?
+}
+
+model UserResume {
+  id           String            @id @default(uuid())
+  resumeURL    String
+  user         User              @relation(fields: [id], references: [id])
+  activeResume ActiveUserResume?
+}
+
+model UserPassword {
+  id             String              @id @default(uuid())
+  userPassword   String              @unique
+  user           User                @relation(fields: [id], references: [id])
+  activePassword ActiveUserPassword?
+}
+
+model ActiveUserResume {
+  userId   String     @unique
+  resumeId String     @unique
+  user     User       @relation(fields: [userId], references: [id])
+  resume   UserResume @relation(fields: [resumeId], references: [id])
+}
+
+model ActiveUserPassword {
+  userId     String       @unique
+  passwordId String       @unique
+  user       User         @relation(fields: [userId], references: [id])
+  password   UserPassword @relation(fields: [passwordId], references: [id])
+}
