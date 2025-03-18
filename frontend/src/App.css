@@ -1,20 +1,16 @@
- body {
-  width: 100%;
-  background: #fff;
-  font-family: "SUSE", sans-serif;
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
-
 
 
 .signup-page label {
   margin-bottom: 5px;
   width: 100px;
   color: #fff;
-}
-
-input::placeholder {
-  color: var(--French-gray);
-  font-family: "SUSE";
 }
 
 .signup-page input {
@@ -24,7 +20,8 @@ input::placeholder {
   background-color: transparent;
   margin-left: 10px;
   color: #fff;
-}
+} */
+
 
  button {
   margin-bottom: 16px;
@@ -38,13 +35,6 @@ input::placeholder {
   font-family: "SUSE";
 }
 
-.login-btn {
-  display: block;
-  text-align: center;
-  margin: 20px auto;
-  text-decoration: underline;
-  color: var(--Wheat);
-}
 
 /* Global class for all icons */
 .svg-inline--fa {
@@ -63,8 +53,6 @@ button:hover {
   border: none;
 }
 
-
-/* End of signup.js css */ 
 
 /* Media Queries */
 @media screen and (max-width: 575px) {

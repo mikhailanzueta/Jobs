@@ -1,5 +1,9 @@
 {
   "files": [],
+  // "include": ["src/**/*.ts", "../shared/**/*.ts"],
+  // "exclude": [
+  //   "dist", "node_modules"
+  // ],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
