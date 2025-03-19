@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons'
-import {checkIfPasswordValid, ApiReturnStatusCodes, ApiReturnStatusMessages, checkPasswordMatch, PasswordErrorCodes} from '../../../../shared'
+import {checkIfPasswordValid, checkPasswordMatch, PasswordErrorCodes} from '../../../../shared'
 
 
 function Signup() {
@@ -35,6 +35,8 @@ function Signup() {
     if (!passwordsMatch) {
       setConfirmPasswordError(PasswordErrorCodes.PasswordsDoNotMatch);
     }
+
+    if(formData)
 
     try {
       const response = await fetch('http://localhost:3000/api/Signup', {
@@ -86,14 +88,22 @@ function Signup() {
               <div className='mb-5 input-container'>
                 <label htmlFor="password" className='mb-1.5 w-full text-white '></label>
                 <FontAwesomeIcon icon={faLock} className='password-icon text-white text-[18px]'/>
-                <input type="password" name="password" id="password" placeholder='Password' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5 placeholder:text-[french-gray]' value={password} onChange={(e) => setPassword(e.currentTarget.value)} required />
+                <input type="password" name="password" id="password" placeholder='Password' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5 placeholder:text-[french-gray]' value={password} onChange={(e) => {
+                  const value = e.currentTarget.value;
+                  setPassword(value);
+                  setPasswordError(null)
+                }} required />
               </div>
-              {passwordError && <div className="text-red-500 text-sm mt-1">{passwordError}</div>}
+              {passwordError && <div className="text-red-500 text-sm mr-4">{passwordError}</div>}
               <div className='mb-5 input-container'>
                 <label htmlFor="password"></label>
                 <FontAwesomeIcon icon={faLock} className='password-icon text-white text-[18px]'/>
-                <input type="password" name="confirmPassword" id="confirmPassword" placeholder='Confirm Password' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5' value={confirmPassword} onChange={(e) => setConfirmPassword(e.currentTarget.value)} required />
-                {confirmPasswordError && <div className="text-red-500 text-sm mt-1">{confirmPasswordError}</div>}
+                <input type="password" name="confirmPassword" id="confirmPassword" placeholder='Confirm Password' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5' value={confirmPassword} onChange={(e) => {
+                  const value = e.currentTarget.value;
+                  setConfirmPassword(value);
+                  setConfirmPasswordError("")
+                }} required />
+                {confirmPasswordError && <div className="text-red-500 text-sm mr-4">{confirmPasswordError}</div>}
               </div>
               <div className='mb-5 ml-4 input-container'>
                 <input type='file' name='resume' id='resume' />
