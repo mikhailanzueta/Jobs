@@ -47,6 +47,21 @@ form {
   font-size: 13px;
 } 
 
+.eye-icon {
+  position: absolute;
+  color: white;
+  cursor: pointer;
+  right: 18px;
+  top: 18px;
+}
+.eye-slash-icon {
+  position: absolute;
+  color: white;
+  cursor: pointer;
+  right: 18px;
+  top: 18px;
+}
+
 button:hover {
   background-color: var(--Wheat);
   color: var(--Black);

@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faEnvelope, faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 import {checkIfPasswordValid, checkPasswordMatch, PasswordErrorCodes} from '../../../../shared'
 
@@ -13,9 +13,12 @@ function Signup() {
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>("")
+  const [type, setType] = useState('password');
+  const [type2, setType2] = useState('password');
+  const [icon, setIcon] = useState(faEyeSlash);
+  const [icon2, setIcon2] = useState(faEyeSlash);
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
 
     const formData = new FormData(e.currentTarget)
     if(formData.has("resume")) {
@@ -25,18 +28,18 @@ function Signup() {
     for (const [key, value] of formData.entries()) {
       console.log(key + ': ' + value);
     }
-
-    const isPasswordValid = checkIfPasswordValid(password)
-    if (!isPasswordValid) {
-      setPasswordError(PasswordErrorCodes.WeakPassword)
+    
+    // change variable name to 'doespasshaveerror' or something
+    // if password is a string and no errors, set password to result
+    const possibleError = checkIfPasswordValid(password)
+    if (possibleError) {
+      setPasswordError(possibleError) //
     }
 
     const passwordsMatch = checkPasswordMatch(password, confirmPassword);
     if (!passwordsMatch) {
       setConfirmPasswordError(PasswordErrorCodes.PasswordsDoNotMatch);
     }
-
-    if(formData)
 
     try {
       const response = await fetch('http://localhost:3000/api/Signup', {
@@ -47,11 +50,6 @@ function Signup() {
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(`HTTP Error: ${JSON.stringify(errorData)}`)
-        // if (ApiReturnStatusCodes[response.status] == null) {
-        //   console.error('Unknown error code: ', response.status, errorData)
-        // }else {
-        //   setFormError(ApiReturnStatusMessages[response.status])
-        // }
       }
       const result = await response.json()
       console.log('User successfully signed up: ', result)
@@ -60,6 +58,25 @@ function Signup() {
     }
 
   };
+
+  const handlePasswordToggle = () => {
+    if (type === 'password') {
+      setIcon(faEye)
+      setType('text')
+    } else {
+      setIcon(faEyeSlash)
+      setType('password')
+    }
+  }
+  const handleConfirmPasswordToggle = () => {
+    if (type2 === 'password') {
+      setIcon2(faEye)
+      setType2('text')
+    } else {
+      setIcon2(faEyeSlash)
+      setType2('password')
+    }
+  }
     
     return (
         <React.Fragment>
@@ -85,26 +102,32 @@ function Signup() {
                 <FontAwesomeIcon icon={faEnvelope} className='email-icon text-white text-[18px]'/>
                 <input type="text" name="email" id="email" placeholder='Email' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5 placeholder:text-[french-gray]' required />
               </div>
-              <div className='mb-5 input-container'>
+              <div className='mb-5 relative input-container'>
                 <label htmlFor="password" className='mb-1.5 w-full text-white '></label>
                 <FontAwesomeIcon icon={faLock} className='password-icon text-white text-[18px]'/>
-                <input type="password" name="password" id="password" placeholder='Password' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5 placeholder:text-[french-gray]' value={password} onChange={(e) => {
+                <input type={type} name="password" id="password" placeholder='Password' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5 placeholder:text-[french-gray]' value={password} onChange={(e) => {
                   const value = e.currentTarget.value;
                   setPassword(value);
-                  setPasswordError(null)
-                }} required />
+                  setPasswordError("")
+                }}  required />
+                <span className='icon' onClick={handlePasswordToggle}>
+                  <FontAwesomeIcon icon={icon} className="eye-icon" />
+                </span>
               </div>
-              {passwordError && <div className="text-red-500 text-sm mr-4">{passwordError}</div>}
-              <div className='mb-5 input-container'>
+              {passwordError && <div className="text-red-500 text-sm mb-[4px] ml-[8px]">{passwordError}</div>}
+              <div className='mb-5 relative input-container'>
                 <label htmlFor="password"></label>
                 <FontAwesomeIcon icon={faLock} className='password-icon text-white text-[18px]'/>
-                <input type="password" name="confirmPassword" id="confirmPassword" placeholder='Confirm Password' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5' value={confirmPassword} onChange={(e) => {
+                <input type={type2} name="confirmPassword" id="confirmPassword" placeholder='Confirm Password' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5 placeholder:text-[french-gray]' value={confirmPassword} onChange={(e) => {
                   const value = e.currentTarget.value;
                   setConfirmPassword(value);
                   setConfirmPasswordError("")
                 }} required />
-                {confirmPasswordError && <div className="text-red-500 text-sm mr-4">{confirmPasswordError}</div>}
+                <span className='icon' onClick={handleConfirmPasswordToggle}>
+                  <FontAwesomeIcon icon={icon2} className="eye-slash-icon" />
+                </span>
               </div>
+              {confirmPasswordError && <div className="text-red-500 text-sm mb-[4px] ml-[6px]">{confirmPasswordError}</div>}
               <div className='mb-5 ml-4 input-container'>
                 <input type='file' name='resume' id='resume' />
                 <button></button>
@@ -119,5 +142,4 @@ function Signup() {
         </React.Fragment>
       );
 }
-
 export default Signup
