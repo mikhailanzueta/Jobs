@@ -5,10 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faEnvelope, faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 import {checkIfPasswordValid, checkPasswordMatch, PasswordErrorCodes} from '../../../../shared'
+import { handleGoogleSignIn, tryEmailSignIn } from '../../../src/firebase'
 
 
 function Signup() {
   // const [formError, setFormError] = useState<string | null>(null)
+  const [email, setEmail] = useState<string>('')
   const [passwordError, setPasswordError] = useState<string | null>();
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("")
   const [password, setPassword] = useState<string>("")
@@ -20,6 +22,7 @@ function Signup() {
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Get the provided form data from user:
     const formData = new FormData(e.currentTarget)
     if(formData.has("resume")) {
       const file = formData.get('resume') as File;
@@ -28,19 +31,17 @@ function Signup() {
     for (const [key, value] of formData.entries()) {
       console.log(key + ': ' + value);
     }
-    
-    // change variable name to 'doespasshaveerror' or something
-    // if password is a string and no errors, set password to result
+    // Check if the password is valid:
     const possibleError = checkIfPasswordValid(password)
     if (possibleError) {
       setPasswordError(possibleError) //
     }
-
+    // Check if passwords match:
     const passwordsMatch = checkPasswordMatch(password, confirmPassword);
     if (!passwordsMatch) {
       setConfirmPasswordError(PasswordErrorCodes.PasswordsDoNotMatch);
     }
-
+    // Send data to backend:
     try {
       const response = await fetch('http://localhost:3000/api/Signup', {
         method: "POST",
@@ -75,8 +76,18 @@ function Signup() {
     } else {
       setIcon2(faEyeSlash)
       setType2('password')
-    }
+    } 
   }
+
+  // Handle firebase email sign in:
+  const handleEmailSignIn = async() => {
+    if (!email) {
+      alert('Please provide an email!');
+      return;
+    }
+    await tryEmailSignIn(email)
+  }
+  
     
     return (
         <React.Fragment>
@@ -100,7 +111,7 @@ function Signup() {
               <div className='mb-5 input-container'>
                 <label htmlFor="email"></label>
                 <FontAwesomeIcon icon={faEnvelope} className='email-icon text-white text-[18px]'/>
-                <input type="text" name="email" id="email" placeholder='Email' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5 placeholder:text-[french-gray]' required />
+                <input type="text" name="email" id="email" placeholder='Email' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5 placeholder:text-[french-gray]' value={email} onChange={(e) => setEmail(e.currentTarget.value)} required />
               </div>
               <div className='mb-5 relative input-container'>
                 <label htmlFor="password" className='mb-1.5 w-full text-white '></label>
@@ -128,12 +139,13 @@ function Signup() {
                 </span>
               </div>
               {confirmPasswordError && <div className="text-red-500 text-sm mb-[4px] ml-[6px]">{confirmPasswordError}</div>}
+              <h1 className='text-center text-[16px] mt-1 mb-4 text-gray-300 tracking wide upload-resume'>Upload your Resume</h1>
               <div className='mb-5 ml-4 input-container'>
                 <input type='file' name='resume' id='resume' />
                 <button></button>
               </div>
-              <button type="submit" className='text-white text-[14px] border-[1px] border-white bg-transparent rounded-[6px] p-[12px] mb-[16px] hover:bg-wheat hover:text-black hover:border-none'>Sign up</button>
-              <button type="button" className='text-white text-[14px] border-[1px] border-white bg-transparent rounded-[6px] p-[12px] mb-[16px] ml-2.5 hover:bg-wheat hover:text-black hover:border-none'>Sign up with Google <FontAwesomeIcon icon={faGoogle} className='ml-2 text-[13px] google-icon'/></button>
+              <button type="submit" className='text-white text-[14px] border-[1px] border-white bg-transparent rounded-[6px] p-[12px] mb-[16px] hover:bg-wheat hover:text-black hover:border-none' onClick={handleEmailSignIn}>Sign up</button>
+              <button type="button" className='text-white text-[14px] border-[1px] border-white bg-transparent rounded-[6px] p-[12px] mb-[16px] ml-2.5 hover:bg-wheat hover:text-black hover:border-none' onClick={handleGoogleSignIn}>Sign up with Google <FontAwesomeIcon icon={faGoogle} className='ml-2 text-[13px] google-icon'/></button>
               
               <Link to="/login" className="text-center text-wheat m-[10px_auto] underline login-btn">Already have an account?</Link>
             </form>

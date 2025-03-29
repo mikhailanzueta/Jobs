@@ -1,3 +1,9 @@
+body {
+  width: 100%;
+  background: #fff;
+  font-family: "SUSE", sans-serif;
+}
+
 form {
     display: flex;
     flex-direction: column;
