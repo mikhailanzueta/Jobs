@@ -6,12 +6,12 @@ import {getAuth, GoogleAuthProvider, signInWithPopup, sendSignInLinkToEmail, isS
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBzXkn5It_nBE36um3sjKKuE32SbYcLHTk",
-  authDomain: "job-platform-68a9c.firebaseapp.com",
-  projectId: "job-platform-68a9c",
-  storageBucket: "job-platform-68a9c.firebasestorage.app",
-  messagingSenderId: "594262272",
-  appId: "1:594262272:web:f913ab99a55432c7aedbe5"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
