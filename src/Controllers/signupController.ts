@@ -3,15 +3,14 @@ import bcrypt from 'bcrypt';
 import owasp from "owasp-password-strength-test";
 import prisma, { createNewUser } from '../prisma'
 import { uploadFileToAwsS3 } from '../Controllers/s3Use';
-import {ApiReturnStatusCodes} from '../../shared/types';
 import {UploadedFiles} from '../types'
-import path from 'path'
-
+import { ApiReturnStatusMessages, checkIfPasswordValid, checkPasswordMatch } from '../../../shared';
+// import { completeSignIn, tryEmailSignIn } from '../../../frontend/src/firebase'
 
 export const signupRequest = async (req: Request, res: Response):Promise<any> => {
     try {
         // extract all the data from the frontend's request body
-        const { firstName, lastName, email, password, resumeName } = req.body;
+        const { firstName, lastName, email, password, confirmPassword, resumeName } = req.body;
         const files = req.files as UploadedFiles; // Explicitly cast req.files
         const file = files?.resume; // Get the resume file
         console.log('req.files: ', files)
@@ -24,12 +23,20 @@ export const signupRequest = async (req: Request, res: Response):Promise<any> =>
 
         const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(email)) {
-            return res.status(401).json({error: "Not a valid email address."})
+            res.status(401).json({error: "Not a valid email address."})
+            return
         }
 
-        const passwordTest = owasp.test(password);
-        if (!passwordTest.strong) {
-            return res.status(400).json({ error: "Password is too weak." });
+        const possibleError = checkIfPasswordValid(password)
+        if (possibleError) {
+          res.status(400).json({error: 'Invalid password'})
+          return
+        }
+    
+        const passwordsMatch = checkPasswordMatch(password, confirmPassword);
+        if (!passwordsMatch) {
+          res.status(402).json({error: "passwords do not match"})
+          return;
         }
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);

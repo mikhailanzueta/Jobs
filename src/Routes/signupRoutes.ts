@@ -2,7 +2,6 @@ import express, { Router } from 'express';
 import { signupRequest } from '../Controllers/signupController'
 import multer from 'multer';
 const upload = multer({ dest: 'uploads/' });
-import { uploadFileToAws } from '../Controllers/s3Connect';
 
 const router: Router = Router();
 router.get('/Signup', (req, res) => {

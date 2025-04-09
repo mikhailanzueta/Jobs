@@ -10,6 +10,7 @@ import multer from 'multer';
 import expressformData from 'express-form-data';
 import env from "./config";
 import {router as signupRoutes} from './Routes/signupRoutes';
+import {router as loginRoutes} from './Routes/LoginRoutes'
 import { uploadFileToAwsS3 } from './Controllers/s3Use';
 
 const app = express();
@@ -49,6 +50,7 @@ app.get("/", (req, res) => {
 });
 
 app.use('/api', signupRoutes)
+app.use('/api', loginRoutes)
 
 app.listen(env.port, () => {
     console.log(`Server listening on port ${env.port}`);

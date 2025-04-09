@@ -15,6 +15,7 @@ model User {
   passwords      UserPassword[]
   activeResume   ActiveUserResume?
   activePassword ActiveUserPassword?
+  invites        Invites?
 }
 
 model UserResume {
@@ -43,4 +44,13 @@ model ActiveUserPassword {
   passwordId String       @unique
   user       User         @relation(fields: [userId], references: [id])
   password   UserPassword @relation(fields: [passwordId], references: [id])
+}
+
+model Invites {
+  id        String        @id @default(uuid())
+  userId    String        @unique
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @default(now())
+  accepted       Boolean
+  user      User          @relation(fields: [userId], references: [id])
 }
