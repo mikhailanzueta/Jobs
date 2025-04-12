@@ -1,15 +1,18 @@
 import React from 'react'
 import { useState } from 'react'
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faEnvelope, faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 import {checkIfPasswordValid, checkPasswordMatch, PasswordErrorCodes} from '../../../../shared'
-import { handleGoogleSignIn, tryEmailSignIn } from '../../../src/firebase'
+import { handleGoogleSignIn, auth } from '../../../src/firebase'
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import SuccessModal from '../Signup/signupModal'; // Adjust the path if needed
 
 
 function Signup() {
-  // const [formError, setFormError] = useState<string | null>(null)
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const navigate = useNavigate()
   const [email, setEmail] = useState<string>('')
   const [passwordError, setPasswordError] = useState<string | null>();
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("")
@@ -41,8 +44,19 @@ function Signup() {
     if (!passwordsMatch) {
       setConfirmPasswordError(PasswordErrorCodes.PasswordsDoNotMatch);
     }
-    // Send data to backend:
+    
     try {
+      // Create firebase user and send verification email ONLY when there are no active form errors:
+      if (!possibleError && passwordsMatch) {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const firebaseUser = userCredential.user;
+        await sendEmailVerification(firebaseUser)
+        .then(() => {
+          setShowModal(true)
+        })
+      }
+
+      // Send data to backend:
       const response = await fetch('http://localhost:3000/api/Signup', {
         method: "POST",
         headers: {},
@@ -78,16 +92,6 @@ function Signup() {
       setType2('password')
     } 
   }
-
-  // Handle firebase email sign in:
-  const handleEmailSignIn = async() => {
-    if (!email) {
-      alert('Please provide an email!');
-      return;
-    }
-    await tryEmailSignIn(email)
-  }
-  
     
     return (
         <React.Fragment>
@@ -144,13 +148,18 @@ function Signup() {
                 <input type='file' name='resume' id='resume' />
                 <button></button>
               </div>
-              <button type="submit" className='text-white text-[14px] border-[1px] border-white bg-transparent rounded-[6px] p-[12px] mb-[16px] hover:bg-wheat hover:text-black hover:border-none' onClick={handleEmailSignIn}>Sign up</button>
+              <button type="submit" className='text-white text-[14px] border-[1px] border-white bg-transparent rounded-[6px] p-[12px] mb-[16px] hover:bg-wheat hover:text-black hover:border-none'>Sign up</button>
               <button type="button" className='text-white text-[14px] border-[1px] border-white bg-transparent rounded-[6px] p-[12px] mb-[16px] ml-2.5 hover:bg-wheat hover:text-black hover:border-none' onClick={handleGoogleSignIn}>Sign up with Google <FontAwesomeIcon icon={faGoogle} className='ml-2 text-[13px] google-icon'/></button>
               
-              <Link to="/login" className="text-center text-wheat m-[10px_auto] underline login-btn">Already have an account?</Link>
+              <button className="text-center text-wheat m-[10px_auto] underline login-btn" onClick={() => navigate("/Login")}>Already have an account?</button>
             </form>
           </div>
           
+          <SuccessModal show={showModal} onClose={() => {
+            setShowModal(false);
+            // navigate("/Login");
+          }} />
+
         </React.Fragment>
       );
 }
