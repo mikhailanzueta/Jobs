@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
+import {getAuth, GoogleAuthProvider, signInWithPopup, applyActionCode, Auth } from "firebase/auth"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -24,32 +24,33 @@ const provider = new GoogleAuthProvider();
   const actionCodeSettings = {
     // URL you want to redirect back to. The domain (www.example.com) for this
     // URL must be in the authorized domains list in the Firebase Console.
-    url: 'http://localhost:5173/',
+    url: 'http://localhost:5173/', // This is the continueURL
     handleCodeInApp: true,
   };
 
-// // Complete the sign in after user clicks the confirmation link:
-// const completeSignIn = async(): Promise<boolean | undefined> => {
-//   if (isSignInWithEmailLink(auth, window.location.href)) {
-//     let email = window.localStorage.getItem('emailForSignIn');
-//     if (!email) {
-//       email = window.prompt('Please provide your email for confirmation');
-//     } 
-//     // If there is an email, sign the user in and remove the email from storage:
-//     if (email) {
-//       try {
-//           const result = await signInWithEmailLink(auth, email, window.location.href)
-//           window.localStorage.removeItem('emailForSignIn');
-//           console.log(result);
-//           return true
-//       } catch(error) {
-//           console.error('There was an error signing in: ', error);
-//           return false
-//       }
-//     }
-//   }
-//   return undefined
-// }
+
+function handleVerifyEmail(auth: Auth, actionCode: string, onSuccess: () => void) {
+  // Localize the UI to the selected language as determined by the lang
+  // parameter.
+  // Try to apply the email verification code.
+  applyActionCode(auth, actionCode)
+  .then(() => {
+    // Email address has been verified.
+    console.log('Email has been verified!')
+    if (onSuccess) onSuccess()
+
+    // TODO: Display a confirmation message to the user.
+    // You could also provide the user with a link back to the app.
+
+    // TODO: If a continue URL is available, display a button which on
+    // click redirects the user back to the app via continueUrl with
+    // additional state determined from that URL's parameters.
+  }).catch((error) => {
+    console.error('Verification link has expired, Please verify your email again.', error)
+    // Code is invalid or expired. Ask the user to verify their email address
+    // again.
+  });
+}
 
 
 // Handle google pop up sign in:
@@ -63,7 +64,4 @@ const handleGoogleSignIn = async() => {
   }
 }
 
-// Firebase email authentication link:
-
-
-export { app, auth, provider, firebaseConfig, signInWithPopup, handleGoogleSignIn, actionCodeSettings  };
+export { app, auth, provider, firebaseConfig, signInWithPopup, handleGoogleSignIn, handleVerifyEmail, actionCodeSettings  };
