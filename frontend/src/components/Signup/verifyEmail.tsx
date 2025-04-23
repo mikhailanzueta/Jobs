@@ -21,7 +21,7 @@ function VerifyEmail() {
     return (
         <>
           {/* Show the modal to the user and navigate them back to the signup page on click */}
-          <VerifiedModal show={showModal} onClose={() => navigate('/Signup')} />
+          <VerifiedModal show={showModal} onClose={() => navigate('/Login')} />
         </>
       );
 }

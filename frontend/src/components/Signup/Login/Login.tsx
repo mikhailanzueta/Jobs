@@ -12,6 +12,7 @@ import { handleGoogleSignIn } from '../../../../src/firebase'
 function Login() {
     const navigate = useNavigate()
     const [email, setEmail] = useState<string>('')
+    const [emailError, setEmailError] = useState<string | null>()
     const [passwordError, setPasswordError] = useState<string | null>();
     const [password, setPassword] = useState<string>("")
     const [type, setType] = useState('password');
@@ -21,23 +22,37 @@ function Login() {
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const formData = new FormData(e.currentTarget);
 
         try {   
             // fetch user data from backend:
             const response = await fetch('http://localhost:3000/api/Login', {
                 method: 'POST',
-                headers: {},
-                body: formData
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({email, password})
             })
+
+            const result = await response.json();
+
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(`HTTP Error: ${JSON.stringify(errorData)}`)
+                const message = result.error || 'Something went wrong!'
+
+                if (message.toLowerCase().includes('email')) {
+                    setEmailError(message)
+                }
+                if (!message.toLowerCase().includes('email')) {
+                    setPasswordError(message)
+                } 
+                return
+
+                // const errorData = await response.json();
+                // throw new Error(`HTTP Error: ${JSON.stringify(errorData)}`)
             }
-            const result = await response.json()
             console.log(result)
         } catch(error) {
             console.error('Error: ', error)
+            setPasswordError('Server error.')
           }
     }
 
@@ -69,8 +84,13 @@ function Login() {
             <div className='mb-5 input-container'>
                 <label htmlFor="email"></label>
                 <FontAwesomeIcon icon={faEnvelope} className='email-icon text-white text-[18px]'/>
-                <input type="text" name="email" id="email" placeholder='Email' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5 placeholder:text-[french-gray]' value={email} onChange={(e) => setEmail(e.currentTarget.value)} required />
+                <input type="text" name="email" id="email" placeholder='Email' className='w-[20vw] p-4 border-[1px] text-[white] border-white bg-transparent ml-5 placeholder:text-[french-gray]' value={email} onChange={(e) => {
+                    const value = e.currentTarget.value
+                    setEmail(value)
+                    setEmailError('')
+                }} required />
             </div>
+            {emailError && <div className="text-red-500 text-sm mb-[4px] ml-[8px]">{emailError}</div>}
             <div className='mb-5 relative input-container'>
                 <label htmlFor="password" className='mb-1.5 w-full text-white '></label>
                 <FontAwesomeIcon icon={faLock} className='password-icon text-white text-[18px]'/>
